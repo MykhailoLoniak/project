@@ -2,9 +2,9 @@ const out = document.getElementById('calcScreen');
 const ac = document.getElementById('ac');
 const buttons = document.getElementById('buttons');
 
-let a = '';
-let b = '';
-let sing = '';
+let firstNumber = '';
+let secondNumber = '';
+let operationNuber = '';
 let finish = false;
 
 const digit = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
@@ -12,9 +12,9 @@ const acshen = ['-', '+', 'x', '/'];
 
 // кнопка очистити
 function clearAll() {
-  a = '';
-  b = '';
-  sing = '';
+  firstNumber = '';
+  secondNumber = '';
+  operationNuber = '';
   finish = false;
   out.textContent = '0';
 }
@@ -27,54 +27,67 @@ buttons.onclick = (event) => {
 
   //отримуємо нажату кнопку
   const key = event.target.textContent;
+  console.log(key);
+
   //якщо нажато від 0-9 або .
   if (digit.includes(key)) {
-    if (b == '' && sing == '') {
-      a += key;
+    if (secondNumber == '' && operationNuber == '') {
+      firstNumber += key;
 
-      out.textContent = a;
-    } else if (a !== '' && b !== '' && finish) {
-      b = key;
+      out.textContent = firstNumber;
+    } else if (firstNumber !== '' && secondNumber !== '' && finish) {
+      secondNumber = key;
       finish = false;
-      out.textContent = b;
+      out.textContent = secondNumber;
     } else {
-      b += key;
-      out.textContent = b;
+      secondNumber += key;
+      out.textContent = secondNumber;
     }
     //якщо нажато -,+,х,/,
   } else if (acshen.includes(key)) {
-    sing = key;
-    out.textContent = sing;
+    operationNuber = key;
+    out.textContent = operationNuber;
   }
-  console.log(a, sing, b);
 
   if (key === '=') {
     //нажато =
-    if (b === '') b = a;
-    switch (sing) {
+    if (secondNumber === '') secondNumber = firstNumber;
+    switch (operationNuber) {
       case '+':
-        a = +a + +b;
+        firstNumber = +firstNumber + +secondNumber;
         break;
       case '-':
-        a = +a - +b;
+        firstNumber = +firstNumber - +secondNumber;
         break;
       case 'x':
-        a = +a * +b;
+        firstNumber = +firstNumber * +secondNumber;
         break;
       case '/':
-        if (b === '0') {
+        if (secondNumber === '0') {
           out.textContent = 'Помилка';
-          a = '';
-          b = '';
-          sing = '';
+          firstNumber = '';
+          secondNumber = '';
+          operationNuber = '';
           return;
         }
-        a = +a / +b;
+        firstNumber = +firstNumber / +secondNumber;
         break;
     }
     finish = true;
-    out.textContent = a;
+    out.textContent = firstNumber;
   }
-
-  console.log(a);
+  // якщо нажато % або +/-
+  function performUnaryOperation(operation) {
+    if (secondNumber === '' && operationNuber === '') {
+      firstNumber = operation(firstNumber);
+      out.textContent = firstNumber;
+    } else if (firstNumber !== '' && operationNuber !== '') {
+      secondNumber = operation(secondNumber);
+      out.textContent = secondNumber;
+    }
+  }
+  // якщо нажато %
+  if (key == '%') performUnaryOperation((value) => value / 100);
+  //якщо натиснуто +/-
+  if (key == '+/-') performUnaryOperation((value) => value / -1);
 };
