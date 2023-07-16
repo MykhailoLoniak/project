@@ -4,7 +4,7 @@ const buttons = document.getElementById('buttons');
 
 let firstNumber = '';
 let secondNumber = '';
-let operationNuber = '';
+let operationNumber = '';
 let finish = false;
 
 const digit = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
@@ -14,7 +14,7 @@ const acshen = ['-', '+', 'x', '/'];
 function clearAll() {
   firstNumber = '';
   secondNumber = '';
-  operationNuber = '';
+  operationNumber = '';
   finish = false;
   out.textContent = '0';
 }
@@ -31,7 +31,7 @@ buttons.onclick = (event) => {
 
   //якщо нажато від 0-9 або .
   if (digit.includes(key)) {
-    if (secondNumber == '' && operationNuber == '') {
+    if (secondNumber == '' && operationNumber == '') {
       firstNumber += key;
 
       out.textContent = firstNumber;
@@ -45,14 +45,14 @@ buttons.onclick = (event) => {
     }
     //якщо нажато -,+,х,/,
   } else if (acshen.includes(key)) {
-    operationNuber = key;
-    out.textContent = operationNuber;
+    operationNumber = key;
+    out.textContent = operationNumber;
   }
 
   if (key === '=') {
     //нажато =
     if (secondNumber === '') secondNumber = firstNumber;
-    switch (operationNuber) {
+    switch (operationNumber) {
       case '+':
         firstNumber = +firstNumber + +secondNumber;
         break;
@@ -67,7 +67,7 @@ buttons.onclick = (event) => {
           out.textContent = 'Помилка';
           firstNumber = '';
           secondNumber = '';
-          operationNuber = '';
+          operationNumber = '';
           return;
         }
         firstNumber = +firstNumber / +secondNumber;
@@ -78,10 +78,10 @@ buttons.onclick = (event) => {
   }
   // якщо нажато % або +/-
   function performUnaryOperation(operation) {
-    if (secondNumber === '' && operationNuber === '') {
+    if (secondNumber === '' && operationNumber === '') {
       firstNumber = operation(firstNumber);
       out.textContent = firstNumber;
-    } else if (firstNumber !== '' && operationNuber !== '') {
+    } else if (firstNumber !== '' && operationNumber !== '') {
       secondNumber = operation(secondNumber);
       out.textContent = secondNumber;
     }
