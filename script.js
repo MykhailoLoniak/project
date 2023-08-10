@@ -1,16 +1,23 @@
+// Отримання елементу, який відображає результат обчислень
 const out = document.getElementById('calcScreen');
+
+// Отримання кнопки "AC" для очищення
 const ac = document.getElementById('ac');
+
+// Отримання контейнера для кнопок калькулятора
 const buttons = document.getElementById('buttons');
 
+// Змінні для збереження чисел, операції та стану обчислень
 let firstNumber = '';
 let secondNumber = '';
 let operationNumber = '';
 let finish = false;
 
+// Масиви для визначення кнопок з цифрами та арифметичними діями
 const digit = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
 const acshen = ['-', '+', 'x', '/'];
 
-// кнопка очистити
+// Функція для очищення всіх даних
 function clearAll() {
   firstNumber = '';
   secondNumber = '';
@@ -18,22 +25,22 @@ function clearAll() {
   finish = false;
   out.textContent = '0';
 }
-// надиманя на будь яку кнопку
+
+// Обробник події кліку на кнопках калькулятора
 buttons.onclick = (event) => {
-  //нажато на calc
+  // Перевірка, чи клік був на кнопці
   if (!event.target.classList.contains('btn')) return;
-  // нажато на AC
+
+  // Очищення даних, якщо натиснута кнопка "AC"
   if (event.target.classList.contains('ac')) clearAll();
 
-  //отримуємо нажату кнопку
+  // Отримання значення натиснутої кнопки
   const key = event.target.textContent;
-  console.log(key);
 
-  //якщо нажато від 0-9 або .
+  // Обробка натискання кнопок з цифрами та "."
   if (digit.includes(key)) {
     if (secondNumber == '' && operationNumber == '') {
       firstNumber += key;
-
       out.textContent = firstNumber;
     } else if (firstNumber !== '' && secondNumber !== '' && finish) {
       secondNumber = key;
@@ -43,14 +50,16 @@ buttons.onclick = (event) => {
       secondNumber += key;
       out.textContent = secondNumber;
     }
-    //якщо нажато -,+,х,/,
-  } else if (acshen.includes(key)) {
+  }
+
+  // Обробка натискання кнопок з арифметичними діями
+  else if (acshen.includes(key)) {
     operationNumber = key;
     out.textContent = operationNumber;
   }
 
+  // Обчислення та відображення результату
   if (key === '=') {
-    //нажато =
     if (secondNumber === '') secondNumber = firstNumber;
     switch (operationNumber) {
       case '+':
@@ -76,7 +85,8 @@ buttons.onclick = (event) => {
     finish = true;
     out.textContent = firstNumber;
   }
-  // якщо нажато % або +/-
+
+  // Обробка натискання кнопок "%" та "+/-"
   function performUnaryOperation(operation) {
     if (secondNumber === '' && operationNumber === '') {
       firstNumber = operation(firstNumber);
@@ -86,8 +96,7 @@ buttons.onclick = (event) => {
       out.textContent = secondNumber;
     }
   }
-  // якщо нажато %
+
   if (key == '%') performUnaryOperation((value) => value / 100);
-  //якщо натиснуто +/-
   if (key == '+/-') performUnaryOperation((value) => value / -1);
 };
